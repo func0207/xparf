@@ -30,6 +30,12 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 - [x] Buat domain entity utama.
 - [x] Update `XparfDbContext` ke schema standard.
 - [x] Build sukses setelah refactor domain.
+- [x] Tambah current user context untuk audit.
+- [x] Tambah global soft delete filter.
+- [x] Tambah concurrency token.
+- [x] Tambah seed permissions/platform settings/topup packages.
+- [x] Hapus template WeatherForecast bawaan.
+- [x] Build sukses setelah audit + seed.
 
 ## Mapping Lama ke Baru
 | Lama | Baru |
@@ -105,8 +111,8 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 ## Domain Model Target
 ### Audit
 - [x] `AuditableEntity`: Id, CreatedAt, CreatedByUserId, UpdatedAt, UpdatedByUserId, DeletedAt, DeletedByUserId, IsDeleted, RowVersion.
-- [ ] Global query filter soft delete.
-- [ ] Concurrency token.
+- [x] Global query filter soft delete.
+- [x] Concurrency token.
 
 ### Identity/Tenant
 - [x] `Company`

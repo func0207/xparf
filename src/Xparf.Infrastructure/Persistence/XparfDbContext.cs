@@ -1,9 +1,14 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Xparf.Core.Abstractions;
 using Xparf.Core.Entities;
 
 namespace Xparf.Infrastructure.Persistence;
 
-public sealed class XparfDbContext(DbContextOptions<XparfDbContext> options) : DbContext(options)
+public sealed class XparfDbContext(
+    DbContextOptions<XparfDbContext> options,
+    ICurrentUserContext currentUserContext) : DbContext(options)
 {
     public DbSet<Company> Companies => Set<Company>();
     public DbSet<User> Users => Set<User>();
@@ -43,6 +48,70 @@ public sealed class XparfDbContext(DbContextOptions<XparfDbContext> options) : D
         ConfigureSale(modelBuilder);
         ConfigureBilling(modelBuilder);
         ConfigureAudit(modelBuilder);
+        ConfigureSeedData(modelBuilder);
+        ConfigureAuditableEntities(modelBuilder);
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        ApplyAuditValues();
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
+    public override int SaveChanges()
+    {
+        ApplyAuditValues();
+        return base.SaveChanges();
+    }
+
+    private void ApplyAuditValues()
+    {
+        var now = DateTime.UtcNow;
+        var userId = currentUserContext.UserId;
+
+        foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.CreatedAt = now;
+                entry.Entity.CreatedByUserId = userId;
+            }
+
+            if (entry.State == EntityState.Modified)
+            {
+                entry.Entity.UpdatedAt = now;
+                entry.Entity.UpdatedByUserId = userId;
+            }
+
+            if (entry.State == EntityState.Deleted)
+            {
+                entry.State = EntityState.Modified;
+                entry.Entity.IsDeleted = true;
+                entry.Entity.DeletedAt = now;
+                entry.Entity.DeletedByUserId = userId;
+            }
+        }
+    }
+
+    private static void ConfigureAuditableEntities(ModelBuilder modelBuilder)
+    {
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            if (!typeof(AuditableEntity).IsAssignableFrom(entityType.ClrType))
+            {
+                continue;
+            }
+
+            var parameter = Expression.Parameter(entityType.ClrType, "entity");
+            var property = Expression.Property(parameter, nameof(AuditableEntity.IsDeleted));
+            var condition = Expression.Equal(property, Expression.Constant(false));
+            var lambda = Expression.Lambda(condition, parameter);
+
+            entityType.SetQueryFilter(lambda);
+            modelBuilder.Entity(entityType.ClrType)
+                .Property(nameof(AuditableEntity.RowVersion))
+                .IsRowVersion();
+        }
     }
 
     private static void ConfigureIdentity(ModelBuilder modelBuilder)
@@ -282,5 +351,12 @@ public sealed class XparfDbContext(DbContextOptions<XparfDbContext> options) : D
             entity.Property(x => x.Action).HasMaxLength(120).IsRequired();
             entity.Property(x => x.EntityName).HasMaxLength(120).IsRequired();
         });
+    }
+
+    private static void ConfigureSeedData(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Permission>().HasData(SeedData.Permissions);
+        modelBuilder.Entity<PlatformSetting>().HasData(SeedData.PlatformSettings);
+        modelBuilder.Entity<TopupPackage>().HasData(SeedData.TopupPackages);
     }
 }

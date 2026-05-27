@@ -1,4 +1,6 @@
 using Serilog;
+using Xparf.Api.Services;
+using Xparf.Core.Abstractions;
 using Xparf.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +10,8 @@ builder.Host.UseSerilog((context, configuration) => configuration
     .WriteTo.Console());
 
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserContext, HttpCurrentUserContext>();
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
