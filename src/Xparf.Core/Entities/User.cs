@@ -17,4 +17,5 @@ public sealed class User : AuditableEntity
     public DateTime? LastLoginAt { get; set; }
 
     public ICollection<UserBranch> UserBranches { get; set; } = new List<UserBranch>();
+    public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 }

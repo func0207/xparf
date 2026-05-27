@@ -36,6 +36,10 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 - [x] Tambah seed permissions/platform settings/topup packages.
 - [x] Hapus template WeatherForecast bawaan.
 - [x] Build sukses setelah audit + seed.
+- [x] Tambah auth foundation JWT + refresh token.
+- [x] Tambah global exception middleware.
+- [x] Tambah FluentValidation auth request.
+- [x] Build sukses setelah auth foundation.
 
 ## Mapping Lama ke Baru
 | Lama | Baru |
@@ -156,9 +160,9 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 - [x] `GET /api/health`
 
 ### Auth
-- [ ] `POST /api/auth/register-company`
-- [ ] `POST /api/auth/login`
-- [ ] `POST /api/auth/refresh`
+- [x] `POST /api/auth/register-company`
+- [x] `POST /api/auth/login`
+- [x] `POST /api/auth/refresh`
 - [ ] `POST /api/auth/logout`
 - [ ] `POST /api/auth/confirm-email`
 - [ ] `POST /api/auth/forgot-password`

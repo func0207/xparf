@@ -12,6 +12,7 @@ public sealed class XparfDbContext(
 {
     public DbSet<Company> Companies => Set<Company>();
     public DbSet<User> Users => Set<User>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
@@ -132,6 +133,13 @@ public sealed class XparfDbContext(
             entity.Property(x => x.PasswordHash).IsRequired();
             entity.HasOne(x => x.Company).WithMany(x => x.Users).HasForeignKey(x => x.CompanyId);
             entity.HasOne(x => x.Role).WithMany().HasForeignKey(x => x.RoleId);
+            entity.HasMany(x => x.RefreshTokens).WithOne(x => x.User).HasForeignKey(x => x.UserId);
+        });
+
+        modelBuilder.Entity<RefreshToken>(entity =>
+        {
+            entity.HasIndex(x => x.TokenHash).IsUnique();
+            entity.Property(x => x.TokenHash).HasMaxLength(128).IsRequired();
         });
 
         modelBuilder.Entity<Role>(entity =>
