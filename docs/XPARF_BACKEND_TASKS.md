@@ -1,0 +1,229 @@
+# XPARF Backend Task List & Checkpoint
+
+Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai.
+
+## Prinsip
+- Nama domain/schema pakai Inggris standard.
+- Catatan bisnis pakai Indonesia.
+- DB target PostgreSQL `xparf`.
+- Backend .NET 10 Web API.
+- Multi-tenant: data bisnis wajib punya `CompanyId`.
+- Stok wajib lewat `StockLedger`.
+- Coin/topup wajib lewat `CoinLedger`.
+- Operasi penting wajib audit.
+- Migrasi DB ditunda sampai model final.
+
+## Checkpoint Selesai
+- [x] Analisa struktur aplikasi lama Web Forms.
+- [x] Buat `REFACTOR_NOTES.md`.
+- [x] Buat `REFACTOR_COMPLETION.md`.
+- [x] Buat folder solution `xparf`.
+- [x] Buat `Xparf.Core`.
+- [x] Buat `Xparf.Infrastructure`.
+- [x] Buat `Xparf.Api`.
+- [x] Buat `Xparf.Core.Tests`.
+- [x] Tambah reference antar project.
+- [x] Tambah EF Core + Npgsql + Serilog awal.
+- [x] Tambah endpoint `GET /api/health`.
+- [x] Build backend sukses.
+- [x] Refactor entity skeleton ke nama standard Inggris.
+- [x] Buat domain entity utama.
+- [x] Update `XparfDbContext` ke schema standard.
+- [x] Build sukses setelah refactor domain.
+
+## Mapping Lama ke Baru
+| Lama | Baru |
+|---|---|
+| CabangToko | Branch |
+| Barang | Item |
+| Barang per cabang | BranchItem |
+| Konsumen | Customer |
+| Distributor | Supplier |
+| Pembelian | Purchase |
+| DetilPembelianBarang | PurchaseLine |
+| Penjualan | Sale |
+| DetilPenjualan | SaleLine |
+| CicilanPenjualan | SalePayment |
+| CicilanPembelian | PurchasePayment |
+| TunggakanKonsumen | Receivable |
+| TunggakanPembelian | Payable |
+| KartuBarang | StockLedger |
+| PerubahanHargaJual | ItemPriceHistory |
+| ComplainPenjualan | SaleComplaint |
+| Module | Permission/MenuItem |
+
+## Flow Lama Dipertahankan
+- [ ] Login user.
+- [ ] Role-based access.
+- [ ] Multi cabang.
+- [ ] Master item/customer/supplier.
+- [ ] Pembelian + detail + pembayaran.
+- [ ] Penjualan retail/grosir + detail + pembayaran.
+- [ ] Tunggakan/piutang.
+- [ ] Upload Excel item/pembelian/stok opname.
+- [ ] Update harga jual.
+- [ ] Laporan stok/pembelian/penjualan.
+- [ ] Komplain/retur penjualan.
+
+## Flow Baru
+### Multi Tenant
+- [ ] Owner daftar email.
+- [ ] Buat `Company`, owner `User`, role default, branch default.
+- [ ] Owner tambah branch dan employee.
+
+### Employee + Role + Branch
+- [ ] Employee punya role.
+- [ ] Employee bisa dibatasi branch.
+- [ ] Permission granular: `sales.create`, `items.read`, `billing.topup`.
+
+### POS + Coin Deduction
+- [ ] Sale draft.
+- [ ] Sale post/checkout.
+- [ ] Validasi stok cukup.
+- [ ] Validasi coin cukup.
+- [ ] Saat posted: deduct stock, buat `StockLedger`, deduct coin, buat `CoinLedger`.
+- [ ] Semua dalam 1 DB transaction.
+
+### Topup QRIS
+- [ ] Owner pilih paket coin.
+- [ ] Buat `CoinTopup` pending.
+- [ ] Generate QR provider.
+- [ ] Webhook QRIS masuk.
+- [ ] Validasi signature/amount/reference.
+- [ ] Update paid, tambah `Company.CoinBalance`, buat `CoinLedger`.
+- [ ] Simpan `PaymentWebhookLog`.
+
+### Super Admin
+- [ ] Login super admin.
+- [ ] Lihat company.
+- [ ] Freeze/unfreeze company.
+- [ ] Setting `coin.sale_posted_deduction`.
+- [ ] Manage topup package.
+- [ ] Manual coin adjustment.
+- [ ] Lihat webhook log.
+
+## Domain Model Target
+### Audit
+- [x] `AuditableEntity`: Id, CreatedAt, CreatedByUserId, UpdatedAt, UpdatedByUserId, DeletedAt, DeletedByUserId, IsDeleted, RowVersion.
+- [ ] Global query filter soft delete.
+- [ ] Concurrency token.
+
+### Identity/Tenant
+- [x] `Company`
+- [x] `User`
+- [x] `Role`
+- [x] `Permission`
+- [x] `RolePermission`
+- [x] `UserBranch`
+
+### Branch/Inventory
+- [x] `Branch`
+- [x] `Item`
+- [x] `BranchItem`
+- [x] `StockLedger`
+- [x] `ItemPriceHistory`
+
+### Master
+- [x] `Customer`
+- [x] `Supplier`
+
+### Purchase
+- [x] `Purchase`
+- [x] `PurchaseLine`
+- [x] `PurchasePayment`
+
+### Sale/POS
+- [x] `Sale`
+- [x] `SaleLine`
+- [x] `SalePayment`
+- [x] `SaleComplaint`
+
+### Coin/Billing
+- [x] `CoinTopup`
+- [x] `CoinLedger`
+- [x] `TopupPackage`
+- [x] `PaymentWebhookLog`
+- [x] `PlatformSetting`
+
+## Endpoint Target
+### Health
+- [x] `GET /api/health`
+
+### Auth
+- [ ] `POST /api/auth/register-company`
+- [ ] `POST /api/auth/login`
+- [ ] `POST /api/auth/refresh`
+- [ ] `POST /api/auth/logout`
+- [ ] `POST /api/auth/confirm-email`
+- [ ] `POST /api/auth/forgot-password`
+- [ ] `POST /api/auth/reset-password`
+
+### Company
+- [ ] `GET /api/company/me`
+- [ ] `PUT /api/company/me`
+- [ ] `GET /api/company/me/coin-balance`
+
+### Users/Roles
+- [ ] CRUD `/api/users`
+- [ ] `POST /api/users/invite`
+- [ ] `PUT /api/users/{id}/roles`
+- [ ] `PUT /api/users/{id}/branches`
+- [ ] CRUD `/api/roles`
+- [ ] `GET /api/permissions`
+- [ ] `PUT /api/roles/{id}/permissions`
+
+### Master/Inventory
+- [ ] CRUD `/api/branches`
+- [ ] CRUD `/api/items`
+- [ ] CRUD `/api/branch-items`
+- [ ] `GET /api/stock-ledgers`
+- [ ] `POST /api/stock-adjustments`
+- [ ] CRUD `/api/customers`
+- [ ] CRUD `/api/suppliers`
+
+### Purchase
+- [ ] CRUD `/api/purchases`
+- [ ] Line CRUD `/api/purchases/{id}/lines`
+- [ ] `POST /api/purchases/{id}/post`
+- [ ] `POST /api/purchases/{id}/payments`
+- [ ] `POST /api/purchases/{id}/cancel`
+
+### Sale/POS
+- [ ] CRUD `/api/sales`
+- [ ] Line CRUD `/api/sales/{id}/lines`
+- [ ] `POST /api/sales/{id}/post`
+- [ ] `POST /api/sales/{id}/payments`
+- [ ] `POST /api/sales/{id}/void`
+- [ ] `GET /api/sales/{id}/receipt`
+
+### Billing/Coin
+- [ ] `GET /api/billing/coin-balance`
+- [ ] `GET /api/billing/coin-ledgers`
+- [ ] `GET /api/billing/topup-packages`
+- [ ] `POST /api/billing/topups`
+- [ ] `GET /api/billing/topups/{id}`
+- [ ] `POST /api/payment-webhooks/qris`
+
+### Super Admin
+- [ ] `GET /api/admin/companies`
+- [ ] `PUT /api/admin/companies/{id}/freeze`
+- [ ] `PUT /api/admin/companies/{id}/unfreeze`
+- [ ] CRUD `/api/admin/topup-packages`
+- [ ] CRUD `/api/admin/platform-settings`
+- [ ] `GET /api/admin/coin-ledgers`
+- [ ] `POST /api/admin/coin-adjustments`
+- [ ] `GET /api/admin/payment-webhook-logs`
+
+## Urutan Backend
+1. Refactor entity skeleton ke nama standard.
+2. Finalisasi domain entity.
+3. Finalisasi DbContext, index, relationship.
+4. Buat repository/unit-of-work atau service langsung via DbContext.
+5. Buat auth JWT.
+6. Buat endpoint tenant/company/user/role.
+7. Buat endpoint branch/item/inventory.
+8. Buat endpoint sale + coin deduction.
+9. Buat endpoint topup QR + webhook.
+10. Buat endpoint purchase.
+11. Buat endpoint report minimal.
+12. Test dan migration PostgreSQL.

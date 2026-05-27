@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Xparf.Api/Xparf.Api.csproj" />
+    <Project Path="src/Xparf.Core/Xparf.Core.csproj" />
+    <Project Path="src/Xparf.Infrastructure/Xparf.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Xparf.Core.Tests/Xparf.Core.Tests.csproj" />
+  </Folder>
+</Solution>
