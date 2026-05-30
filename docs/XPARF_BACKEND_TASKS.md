@@ -220,8 +220,8 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 - [ ] CRUD `/api/branch-items`
 - [ ] `GET /api/stock-ledgers`
 - [ ] `POST /api/stock-adjustments`
-- [ ] CRUD `/api/customers`
-- [ ] CRUD `/api/suppliers`
+- [x] CRUD `/api/customers`
+- [x] CRUD `/api/suppliers`
 
 ### Purchase
 - [ ] CRUD `/api/purchases`
