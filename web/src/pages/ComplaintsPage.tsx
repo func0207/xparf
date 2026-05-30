@@ -1,0 +1,23 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useState } from 'react'
+import { api } from '../lib/api'
+
+type Sale = { id: number; saleNumber: string; saleDate: string; total: number }
+type Complaint = { id: number; saleId: number; saleNumber: string; complaintNumber: string; reason: string; resolution?: string; isResolved: boolean; resolvedAt?: string; createdAt: string }
+const money = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' })
+
+export function ComplaintsPage() {
+  const qc = useQueryClient()
+  const [form, setForm] = useState({ saleId: 0, complaintNumber: `CMP-${Date.now()}`, reason: '' })
+  const [resolution, setResolution] = useState<Record<number, string>>({})
+  const sales = useQuery({ queryKey: ['sales', 'complaints'], queryFn: async () => (await api.get<Sale[]>('/sales')).data })
+  const complaints = useQuery({ queryKey: ['complaints'], queryFn: async () => (await api.get<Complaint[]>('/complaints')).data })
+  const create = useMutation({ mutationFn: async () => api.post('/complaints', form), onSuccess: () => { setForm({ saleId: 0, complaintNumber: `CMP-${Date.now()}`, reason: '' }); qc.invalidateQueries({ queryKey: ['complaints'] }) } })
+  const resolve = useMutation({ mutationFn: async (id: number) => api.post(`/complaints/${id}/resolve`, { resolution: resolution[id] ?? '' }), onSuccess: () => qc.invalidateQueries({ queryKey: ['complaints'] }) })
+  return <div className="space-y-6"><div><h2 className="text-3xl font-bold">Complain Penjualan</h2><p className="text-slate-500">Catat complain pelanggan dan resolusi.</p></div>
+    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><h3 className="text-xl font-bold">Tambah complain</h3><div className="mt-5 grid gap-4 md:grid-cols-3"><Select label="Sale" value={form.saleId} onChange={(v) => setForm({ ...form, saleId: Number(v) })} options={[{ value: 0, label: 'Pilih penjualan' }, ...(sales.data ?? []).map((s) => ({ value: s.id, label: `${s.saleNumber} - ${money.format(s.total)}` }))]} /><Input label="Nomor complain" value={form.complaintNumber} onChange={(v) => setForm({ ...form, complaintNumber: v })} /><Input label="Reason" value={form.reason} onChange={(v) => setForm({ ...form, reason: v })} /></div><button disabled={!form.saleId || !form.reason} className="mt-5 rounded-xl bg-indigo-600 px-4 py-2 font-semibold text-white disabled:opacity-60" onClick={() => create.mutate()}>Simpan complain</button></section>
+    <section className="rounded-2xl border border-slate-200 bg-white shadow-sm"><div className="border-b border-slate-200 p-5"><h3 className="text-xl font-bold">Daftar complain</h3></div><div className="overflow-x-auto"><table className="min-w-full divide-y divide-slate-200 text-sm"><thead className="bg-slate-50"><tr><th className="px-5 py-3 text-left">Nomor</th><th className="px-5 py-3 text-left">Sale</th><th className="px-5 py-3 text-left">Reason</th><th className="px-5 py-3 text-left">Status</th><th className="px-5 py-3 text-left">Resolusi</th></tr></thead><tbody className="divide-y divide-slate-100">{complaints.data?.map((c) => <tr key={c.id}><td className="px-5 py-3">{c.complaintNumber}</td><td className="px-5 py-3">{c.saleNumber}</td><td className="px-5 py-3">{c.reason}</td><td className="px-5 py-3">{c.isResolved ? 'Resolved' : 'Open'}</td><td className="px-5 py-3">{c.isResolved ? c.resolution : <div className="flex gap-2"><input className="rounded-lg border px-3 py-1" value={resolution[c.id] ?? ''} onChange={(e) => setResolution({ ...resolution, [c.id]: e.target.value })} /><button className="rounded-lg bg-emerald-600 px-3 py-1 text-white" onClick={() => resolve.mutate(c.id)}>Resolve</button></div>}</td></tr>)}</tbody></table></div></section>
+  </div>
+}
+function Input({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) { return <label className="block"><span className="text-sm font-medium text-slate-700">{label}</span><input className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3" value={value} onChange={(e) => onChange(e.target.value)} /></label> }
+function Select({ label, value, onChange, options }: { label: string; value: string | number; onChange: (v: string | number) => void; options: { value: string | number; label: string }[] }) { return <label className="block"><span className="text-sm font-medium text-slate-700">{label}</span><select className="mt-1 w-full rounded-xl border border-slate-300 px-4 py-3" value={value} onChange={(e) => onChange(Number.isNaN(Number(e.target.value)) ? e.target.value : Number(e.target.value))}>{options.map((o) => <option key={String(o.value)} value={o.value}>{o.label}</option>)}</select></label> }

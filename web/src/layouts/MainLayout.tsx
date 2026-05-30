@@ -11,7 +11,9 @@ const links = [
   { to: '/inventory', label: 'Stok & Harga' },
   { to: '/transactions/sales', label: 'Penjualan' },
   { to: '/transactions/purchases', label: 'Pembelian' },
+  { to: '/transactions/complaints', label: 'Complain' },
   { to: '/billing', label: 'Billing' },
+  { to: '/admin', label: 'Super Admin' },
   { to: '/reports', label: 'Reports' },
   { to: '/settings', label: 'Settings' },
 ]

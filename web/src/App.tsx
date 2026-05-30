@@ -10,6 +10,9 @@ import { SalesWizardPage } from './pages/SalesWizardPage'
 import { PurchaseWizardPage } from './pages/PurchaseWizardPage'
 import { InventoryPage } from './pages/InventoryPage'
 import { BillingPage } from './pages/BillingPage'
+import { AdminPage } from './pages/AdminPage'
+import { ComplaintsPage } from './pages/ComplaintsPage'
+import { ReceiptPage } from './pages/ReceiptPage'
 import { CrudListPage } from './pages/CrudListPage'
 import { branchColumns, customerColumns, itemColumns, supplierColumns } from './pages/ListPage'
 import {
@@ -40,7 +43,10 @@ export default function App() {
           <Route path="inventory" element={<InventoryPage />} />
           <Route path="transactions/sales" element={<SalesWizardPage />} />
           <Route path="transactions/purchases" element={<PurchaseWizardPage />} />
+          <Route path="transactions/complaints" element={<ComplaintsPage />} />
+          <Route path="sales/:id/receipt" element={<ReceiptPage />} />
           <Route path="billing" element={<BillingPage />} />
+          <Route path="admin" element={<AdminPage />} />
           <Route path="reports" element={<ReportsPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
