@@ -248,14 +248,14 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 - [x] `POST /api/payment-webhooks/qris`
 
 ### Super Admin
-- [ ] `GET /api/admin/companies`
-- [ ] `PUT /api/admin/companies/{id}/freeze`
-- [ ] `PUT /api/admin/companies/{id}/unfreeze`
-- [ ] CRUD `/api/admin/topup-packages`
-- [ ] CRUD `/api/admin/platform-settings`
-- [ ] `GET /api/admin/coin-ledgers`
-- [ ] `POST /api/admin/coin-adjustments`
-- [ ] `GET /api/admin/payment-webhook-logs`
+- [x] `GET /api/admin/companies`
+- [x] `PUT /api/admin/companies/{id}/freeze`
+- [x] `PUT /api/admin/companies/{id}/unfreeze`
+- [x] CRUD `/api/admin/topup-packages`
+- [x] CRUD `/api/admin/platform-settings`
+- [x] `GET /api/admin/coin-ledgers`
+- [x] `POST /api/admin/coin-adjustments`
+- [x] `GET /api/admin/payment-webhook-logs`
 
 ## Urutan Backend
 1. Refactor entity skeleton ke nama standard.
