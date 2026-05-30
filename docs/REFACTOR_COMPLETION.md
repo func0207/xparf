@@ -162,6 +162,48 @@
 - [ ] 7.10 Freeze account jika coin tidak cukup saat transaksi.
 - [ ] 7.11 Email notification saat coin rendah.
 
+## STATUS AUDIT FLOW INTI (2026-05-30)
+
+Legend: ✅ endpoint + UI usable, 🟡 partial/basic, ❌ belum ada.
+
+| Flow inti | Endpoint | UI | Status | Catatan |
+|---|---:|---:|---|---|
+| Auth register/login/refresh/logout | ✅ | 🟡 | 🟡 | Login/register/protected route ada. Forgot/reset/confirm email endpoint ada, UI belum wired ke route utama. |
+| Company profile | ✅ | ✅ | ✅ | `/company/me` dan `/settings` update profile. |
+| Role/permission | ✅ | 🟡 | 🟡 | Endpoint roles/permissions ada. UI baru assign role user; belum CRUD role/permission matrix. |
+| User/employee management | ✅ | ✅ | ✅ | CRUD user, invite, assign role, assign branch ada di `/settings`. Email invite actual sending belum diverifikasi. |
+| Master cabang | ✅ | ✅ | ✅ | CRUD via `/master/branches`. |
+| Master barang | ✅ | ✅ | ✅ | CRUD via `/master/items`. Branch stock/pricing masih via endpoint branch-items, belum UI master khusus. |
+| Master konsumen | ✅ | ✅ | ✅ | CRUD via `/master/customers`. |
+| Master distributor/supplier | ✅ | ✅ | ✅ | CRUD via `/master/suppliers`. |
+| Branch item / harga / stok per cabang | ✅ | ❌ | 🟡 | Endpoint `branch-items` ada. UI baru dipakai sebagai lookup sales; belum CRUD stock/pricing. |
+| Stock ledger & adjustment | ✅ | ❌ | 🟡 | Endpoint ada. UI belum ada. |
+| Penjualan retail/grosir | ✅ | 🟡 | 🟡 | Sales wizard ada: draft, add line, payment, post, void. Belum edit draft line/payment detail, receipt/PDF, validation UX lengkap. |
+| Pembelian | ✅ | ❌ | 🟡 | Endpoint complete. UI masih placeholder `/transactions/purchases`. |
+| Complain | ❌ | ❌ | ❌ | Domain disebut di BRD, endpoint/UI belum ada. |
+| Billing coin topup QRIS | ✅ | ✅ | ✅ | Balance, packages, create topup, ledger UI ada di `/billing`. Payment provider real QRIS perlu environment/provider verification. |
+| Payment webhook QRIS | ✅ | ❌ | 🟡 | Endpoint ada. No UI needed normally, but webhook signature/idempotency hardening perlu audit. |
+| Coin deduction on sale post | ✅ | 🟡 | 🟡 | Backend sale post deduct coin; UI menampilkan `coinDeducted` setelah post. Low coin/freeze UX belum lengkap. |
+| Admin company/topup/settings/coin adjustment | ✅ | ❌ | 🟡 | Endpoint admin ada. Super admin UI belum ada. |
+| Dashboard summary | ✅ | 🟡 | 🟡 | Summary cards ada. Sales chart/stock alerts visual belum lengkap. |
+| Reports preview | ✅ | 🟡 | 🟡 | Sales/purchase/stock preview ada. PDF download belum ada. |
+| QuestPDF reports | ❌ | ❌ | ❌ | Package/templates/PDF endpoints belum ada. |
+| Data migration old SQL Server → PostgreSQL | ❌ | ❌ | ❌ | Belum ada script migration. |
+| Integration/E2E tests | ❌ | ❌ | ❌ | Baru 1 unit test Core. Belum API/UI E2E. |
+
+### Kesimpulan audit
+- Flow inti CRUD master, auth dasar, company, employee, billing coin, reports preview, dan sales draft→post sudah tersedia minimal end-to-end.
+- Belum semua flow inti selesai. Blocker MVP terbesar: Purchase wizard UI, branch stock/pricing UI, complain module, PDF/QuestPDF, super-admin UI, migration script, integration/E2E tests.
+- Endpoint lebih lengkap dari UI. UI masih basic dan beberapa form belum memakai `react-hook-form` + `zod` secara konsisten.
+- Aplikasi belum production-ready sampai PDF, purchase, migration, dan test coverage selesai.
+
+### Prioritas next chunk
+1. Purchase wizard UI `/transactions/purchases` karena endpoint sudah complete dan mirip sales.
+2. Branch item stock/pricing UI + stock adjustment UI.
+3. QuestPDF PDF endpoints + frontend download buttons.
+4. Super admin UI untuk topup packages, platform settings, coin adjustment, freeze/unfreeze.
+5. E2E test login → create barang → create branch item → sale post.
+
 ## TIMELINE (estimated)
 | Phase | Duration | Dependencies |
 |---|---|---|
