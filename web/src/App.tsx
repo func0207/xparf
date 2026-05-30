@@ -8,6 +8,7 @@ import { ReportsPage } from './pages/ReportsPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { SalesWizardPage } from './pages/SalesWizardPage'
 import { PurchaseWizardPage } from './pages/PurchaseWizardPage'
+import { InventoryPage } from './pages/InventoryPage'
 import { BillingPage } from './pages/BillingPage'
 import { CrudListPage } from './pages/CrudListPage'
 import { branchColumns, customerColumns, itemColumns, supplierColumns } from './pages/ListPage'
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="master/customers" element={<CrudListPage title="Master Konsumen" endpoint="/customers" columns={customerColumns} fields={customerFields} createDefaults={customerDefaults} updateShape={removeCodeAndId} />} />
           <Route path="master/suppliers" element={<CrudListPage title="Master Distributor" endpoint="/suppliers" columns={supplierColumns} fields={supplierFields} createDefaults={supplierDefaults} updateShape={removeCodeAndId} />} />
           <Route path="master/branches" element={<CrudListPage title="Master Cabang Toko" endpoint="/branches" columns={branchColumns} fields={branchFields} createDefaults={branchDefaults} updateShape={removeCodeAndId} />} />
+          <Route path="inventory" element={<InventoryPage />} />
           <Route path="transactions/sales" element={<SalesWizardPage />} />
           <Route path="transactions/purchases" element={<PurchaseWizardPage />} />
           <Route path="billing" element={<BillingPage />} />

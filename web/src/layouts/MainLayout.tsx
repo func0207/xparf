@@ -8,6 +8,7 @@ const links = [
   { to: '/master/customers', label: 'Konsumen' },
   { to: '/master/suppliers', label: 'Distributor' },
   { to: '/master/branches', label: 'Cabang Toko' },
+  { to: '/inventory', label: 'Stok & Harga' },
   { to: '/transactions/sales', label: 'Penjualan' },
   { to: '/transactions/purchases', label: 'Pembelian' },
   { to: '/billing', label: 'Billing' },
