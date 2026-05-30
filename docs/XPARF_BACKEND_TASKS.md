@@ -40,6 +40,8 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 - [x] Tambah global exception middleware.
 - [x] Tambah FluentValidation auth request.
 - [x] Build sukses setelah auth foundation.
+- [x] Tambah endpoint company profile dan coin balance.
+- [x] Build sukses setelah company endpoint.
 
 ## Mapping Lama ke Baru
 | Lama | Baru |
@@ -169,9 +171,9 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 - [ ] `POST /api/auth/reset-password`
 
 ### Company
-- [ ] `GET /api/company/me`
-- [ ] `PUT /api/company/me`
-- [ ] `GET /api/company/me/coin-balance`
+- [x] `GET /api/company/me`
+- [x] `PUT /api/company/me`
+- [x] `GET /api/company/me/coin-balance`
 
 ### Users/Roles
 - [ ] CRUD `/api/users`
