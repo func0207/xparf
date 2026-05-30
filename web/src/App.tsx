@@ -5,6 +5,7 @@ import { DashboardPage } from './pages/DashboardPage'
 import { LoginPage } from './pages/LoginPage'
 import { PageStub } from './pages/PageStub'
 import { RegisterPage } from './pages/RegisterPage'
+import { BillingPage } from './pages/BillingPage'
 import { CrudListPage } from './pages/CrudListPage'
 import { branchColumns, customerColumns, itemColumns, supplierColumns } from './pages/ListPage'
 import {
@@ -34,7 +35,7 @@ export default function App() {
           <Route path="master/branches" element={<CrudListPage title="Master Cabang Toko" endpoint="/branches" columns={branchColumns} fields={branchFields} createDefaults={branchDefaults} updateShape={removeCodeAndId} />} />
           <Route path="transactions/sales" element={<PageStub title="Penjualan" description="Wizard penjualan retail/grosir dan coin deduction." />} />
           <Route path="transactions/purchases" element={<PageStub title="Pembelian" description="Wizard pembelian header, detail, konfirmasi." />} />
-          <Route path="billing" element={<PageStub title="Billing" description="Topup QRIS, package coin, ledger." />} />
+          <Route path="billing" element={<BillingPage />} />
           <Route path="reports" element={<PageStub title="Reports" description="Preview dan download PDF dari API." />} />
           <Route path="settings" element={<PageStub title="Settings" description="Company profile, subscription, employees." />} />
         </Route>
