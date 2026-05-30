@@ -57,6 +57,7 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 - Local `main` ahead 1 commit: `9730b71 docs: record local development environment`.
 - Endpoint selesai sampai sekarang: health, auth register/login/refresh, company profile/coin balance, roles/permissions, users/employees, branches.
 - Endpoint berikutnya sesuai urutan backend: master/inventory.
+- `CRUD /api/items` selesai: kontrak, validator, service, controller, DI registration.
 - Build command sukses: `dotnet build xparf.slnx`.
 - Test command sukses: `dotnet test xparf.slnx`.
 - Warning tersisa: `NU1903 Microsoft.Build.Tasks.Core 17.7.2` high severity advisory via transitive dependency.
@@ -215,7 +216,7 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 
 ### Master/Inventory
 - [x] CRUD `/api/branches`
-- [ ] CRUD `/api/items`
+- [x] CRUD `/api/items`
 - [ ] CRUD `/api/branch-items`
 - [ ] `GET /api/stock-ledgers`
 - [ ] `POST /api/stock-adjustments`
