@@ -3,11 +3,11 @@ import { ProtectedRoute } from './components/ProtectedRoute'
 import { MainLayout } from './layouts/MainLayout'
 import { DashboardPage } from './pages/DashboardPage'
 import { LoginPage } from './pages/LoginPage'
-import { PageStub } from './pages/PageStub'
 import { RegisterPage } from './pages/RegisterPage'
 import { ReportsPage } from './pages/ReportsPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { SalesWizardPage } from './pages/SalesWizardPage'
+import { PurchaseWizardPage } from './pages/PurchaseWizardPage'
 import { BillingPage } from './pages/BillingPage'
 import { CrudListPage } from './pages/CrudListPage'
 import { branchColumns, customerColumns, itemColumns, supplierColumns } from './pages/ListPage'
@@ -37,7 +37,7 @@ export default function App() {
           <Route path="master/suppliers" element={<CrudListPage title="Master Distributor" endpoint="/suppliers" columns={supplierColumns} fields={supplierFields} createDefaults={supplierDefaults} updateShape={removeCodeAndId} />} />
           <Route path="master/branches" element={<CrudListPage title="Master Cabang Toko" endpoint="/branches" columns={branchColumns} fields={branchFields} createDefaults={branchDefaults} updateShape={removeCodeAndId} />} />
           <Route path="transactions/sales" element={<SalesWizardPage />} />
-          <Route path="transactions/purchases" element={<PageStub title="Pembelian" description="Wizard pembelian header, detail, konfirmasi." />} />
+          <Route path="transactions/purchases" element={<PurchaseWizardPage />} />
           <Route path="billing" element={<BillingPage />} />
           <Route path="reports" element={<ReportsPage />} />
           <Route path="settings" element={<SettingsPage />} />
