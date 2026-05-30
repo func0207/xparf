@@ -48,6 +48,29 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 - [x] Build sukses setelah users endpoint.
 - [x] Tambah CRUD endpoint branches.
 - [x] Build sukses setelah branches endpoint.
+- [x] Siapkan local dev env: .NET 10 SDK, PostgreSQL 17, DB `xparf`, API LAN health check.
+- [x] Analisa posisi terakhir dari `origin/main`: next backend chunk adalah master/inventory.
+- [x] Build dan test sukses sebelum lanjut implementasi master/inventory.
+
+## Analisa Terakhir (2026-05-30)
+- `origin/main` terakhir: `36c1076 Add branches endpoints`.
+- Local `main` ahead 1 commit: `9730b71 docs: record local development environment`.
+- Endpoint selesai sampai sekarang: health, auth register/login/refresh, company profile/coin balance, roles/permissions, users/employees, branches.
+- Endpoint berikutnya sesuai urutan backend: master/inventory.
+- Build command sukses: `dotnet build xparf.slnx`.
+- Test command sukses: `dotnet test xparf.slnx`.
+- Warning tersisa: `NU1903 Microsoft.Build.Tasks.Core 17.7.2` high severity advisory via transitive dependency.
+- Migration EF belum dibuat; tetap tunda sampai model/endpoint master-inventory stabil.
+
+## Langkah Berikutnya
+1. Tambah kontrak, validator, service, controller untuk `CRUD /api/items`.
+2. Tambah kontrak, validator, service, controller untuk `CRUD /api/customers`.
+3. Tambah kontrak, validator, service, controller untuk `CRUD /api/suppliers`.
+4. Tambah `CRUD /api/branch-items` setelah item dan branch stabil.
+5. Tambah `GET /api/stock-ledgers` untuk audit pergerakan stok.
+6. Tambah `POST /api/stock-adjustments` wajib update `BranchItem.QuantityOnHand` dan insert `StockLedger` dalam 1 transaksi.
+7. Jalankan `dotnet build xparf.slnx` dan `dotnet test xparf.slnx` tiap chunk.
+8. Update checklist docs dan commit tiap endpoint chunk.
 
 ## Mapping Lama ke Baru
 | Lama | Baru |

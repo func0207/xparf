@@ -68,7 +68,7 @@
 - [ ] 2.11 Add idempotency untuk sale post dan QRIS webhook.
 
 ## FASE 3: DATABASE (PostgreSQL)
-- [ ] 3.1 Create database `xparf` in local PostgreSQL
+- [x] 3.1 Create database `xparf` in local PostgreSQL
 - [ ] 3.2 Run initial migration
 - [ ] 3.3 Add indexes:
   - IX_Users_Email (unique)
