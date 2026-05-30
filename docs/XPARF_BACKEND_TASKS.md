@@ -217,9 +217,9 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 ### Master/Inventory
 - [x] CRUD `/api/branches`
 - [x] CRUD `/api/items`
-- [ ] CRUD `/api/branch-items`
-- [ ] `GET /api/stock-ledgers`
-- [ ] `POST /api/stock-adjustments`
+- [x] CRUD `/api/branch-items`
+- [x] `GET /api/stock-ledgers`
+- [x] `POST /api/stock-adjustments`
 - [x] CRUD `/api/customers`
 - [x] CRUD `/api/suppliers`
 
