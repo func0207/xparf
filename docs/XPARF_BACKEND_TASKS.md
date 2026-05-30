@@ -42,6 +42,8 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 - [x] Build sukses setelah auth foundation.
 - [x] Tambah endpoint company profile dan coin balance.
 - [x] Build sukses setelah company endpoint.
+- [x] Tambah endpoint roles dan permissions.
+- [x] Build sukses setelah roles/permissions endpoint.
 
 ## Mapping Lama ke Baru
 | Lama | Baru |
@@ -180,9 +182,9 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 - [ ] `POST /api/users/invite`
 - [ ] `PUT /api/users/{id}/roles`
 - [ ] `PUT /api/users/{id}/branches`
-- [ ] CRUD `/api/roles`
-- [ ] `GET /api/permissions`
-- [ ] `PUT /api/roles/{id}/permissions`
+- [x] CRUD `/api/roles`
+- [x] `GET /api/permissions`
+- [x] `PUT /api/roles/{id}/permissions`
 
 ### Master/Inventory
 - [ ] CRUD `/api/branches`
