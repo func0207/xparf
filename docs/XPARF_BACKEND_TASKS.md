@@ -232,12 +232,12 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 - [x] `POST /api/purchases/{id}/cancel`
 
 ### Sale/POS
-- [ ] CRUD `/api/sales`
-- [ ] Line CRUD `/api/sales/{id}/lines`
-- [ ] `POST /api/sales/{id}/post`
-- [ ] `POST /api/sales/{id}/payments`
-- [ ] `POST /api/sales/{id}/void`
-- [ ] `GET /api/sales/{id}/receipt`
+- [x] CRUD `/api/sales`
+- [x] Line CRUD `/api/sales/{id}/lines`
+- [x] `POST /api/sales/{id}/post`
+- [x] `POST /api/sales/{id}/payments`
+- [x] `POST /api/sales/{id}/void`
+- [x] `GET /api/sales/{id}/receipt`
 
 ### Billing/Coin
 - [ ] `GET /api/billing/coin-balance`
