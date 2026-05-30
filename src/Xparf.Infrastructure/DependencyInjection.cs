@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xparf.Core.Abstractions;
@@ -15,7 +16,9 @@ public static class DependencyInjection
             ?? "Host=localhost;Port=5432;Database=xparf;Username=postgres;Password=risty1313";
 
         services.AddScoped<ICurrentUserContext, SystemCurrentUserContext>();
-        services.AddDbContext<XparfDbContext>(options => options.UseNpgsql(connectionString));
+        services.AddDbContext<XparfDbContext>(options => options
+            .UseNpgsql(connectionString)
+            .ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning)));
 
         return services;
     }

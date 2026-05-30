@@ -31,8 +31,8 @@
 - [ ] 1.7 Buat domain billing: `CoinTopup`, `CoinLedger`, `TopupPackage`, `PaymentWebhookLog`, `PlatformSetting`.
 - [x] 1.8 Setup awal EF Core DbContext dengan PostgreSQL.
 - [ ] 1.9 Finalisasi DbContext, relationship, index, query filter soft delete.
-- [ ] 1.10 Create initial migration PostgreSQL setelah schema final.
-- [ ] 1.11 Add seed data: permissions, topup packages, platform settings.
+- [x] 1.10 Create initial migration PostgreSQL setelah schema final.
+- [x] 1.11 Add seed data: permissions, topup packages, platform settings.
 
 ## FASE 2: API LAYER (.NET 10 Web API)
 - [x] 2.1 Create `Xparf.Api` project
@@ -69,7 +69,7 @@
 
 ## FASE 3: DATABASE (PostgreSQL)
 - [x] 3.1 Create database `xparf` in local PostgreSQL
-- [ ] 3.2 Run initial migration
+- [x] 3.2 Run initial migration
 - [ ] 3.3 Add indexes:
   - IX_Users_Email (unique)
   - IX_Barang_CabangTokoId_Kode (unique)

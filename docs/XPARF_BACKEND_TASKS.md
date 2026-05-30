@@ -60,8 +60,9 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 - `CRUD /api/items` selesai: kontrak, validator, service, controller, DI registration.
 - Build command sukses: `dotnet build xparf.slnx`.
 - Test command sukses: `dotnet test xparf.slnx`.
+- PostgreSQL database `xparf` sudah dibuat dan initial migration `InitialPostgresSchema` sudah applied.
+- Seed verified: 19 permissions, 3 topup packages, 3 platform settings.
 - Warning tersisa: `NU1903 Microsoft.Build.Tasks.Core 17.7.2` high severity advisory via transitive dependency.
-- Migration EF belum dibuat; tetap tunda sampai model/endpoint master-inventory stabil.
 
 ## Langkah Berikutnya
 1. Tambah kontrak, validator, service, controller untuk `CRUD /api/items`.
