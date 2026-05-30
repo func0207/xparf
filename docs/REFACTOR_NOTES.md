@@ -158,5 +158,6 @@
 - Logging: Serilog.
 - Background jobs: Quartz.NET jika nanti ada proses terjadwal.
 - Tests: xUnit + Testcontainers + Moq.
+- Local env prepared on Ubuntu 25.10: .NET SDK 10.0.108, PostgreSQL 17.10, API listens on `http://0.0.0.0:5000`; see `LOCAL_ENV.md`.
 - Lihat `XPARF_BACKEND_TASKS.md` untuk task detail dan checkpoint.
 EOF
