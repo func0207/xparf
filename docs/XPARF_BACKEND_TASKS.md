@@ -225,11 +225,11 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 - [x] CRUD `/api/suppliers`
 
 ### Purchase
-- [ ] CRUD `/api/purchases`
-- [ ] Line CRUD `/api/purchases/{id}/lines`
-- [ ] `POST /api/purchases/{id}/post`
-- [ ] `POST /api/purchases/{id}/payments`
-- [ ] `POST /api/purchases/{id}/cancel`
+- [x] CRUD `/api/purchases`
+- [x] Line CRUD `/api/purchases/{id}/lines`
+- [x] `POST /api/purchases/{id}/post`
+- [x] `POST /api/purchases/{id}/payments`
+- [x] `POST /api/purchases/{id}/cancel`
 
 ### Sale/POS
 - [ ] CRUD `/api/sales`
