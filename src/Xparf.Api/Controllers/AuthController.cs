@@ -28,4 +28,16 @@ public sealed class AuthController(IAuthService authService) : ControllerBase
         var response = await authService.RefreshAsync(request, cancellationToken);
         return Ok(response);
     }
+
+    [HttpPost("logout")]
+    public async Task<ActionResult<AuthMessageResponse>> Logout(LogoutRequest request, CancellationToken cancellationToken) => Ok(await authService.LogoutAsync(request, cancellationToken));
+
+    [HttpPost("confirm-email")]
+    public async Task<ActionResult<AuthMessageResponse>> ConfirmEmail(ConfirmEmailRequest request, CancellationToken cancellationToken) => Ok(await authService.ConfirmEmailAsync(request, cancellationToken));
+
+    [HttpPost("forgot-password")]
+    public async Task<ActionResult<AuthMessageResponse>> ForgotPassword(ForgotPasswordRequest request, CancellationToken cancellationToken) => Ok(await authService.ForgotPasswordAsync(request, cancellationToken));
+
+    [HttpPost("reset-password")]
+    public async Task<ActionResult<AuthMessageResponse>> ResetPassword(ResetPasswordRequest request, CancellationToken cancellationToken) => Ok(await authService.ResetPasswordAsync(request, cancellationToken));
 }

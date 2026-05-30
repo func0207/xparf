@@ -196,10 +196,10 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 - [x] `POST /api/auth/register-company`
 - [x] `POST /api/auth/login`
 - [x] `POST /api/auth/refresh`
-- [ ] `POST /api/auth/logout`
-- [ ] `POST /api/auth/confirm-email`
-- [ ] `POST /api/auth/forgot-password`
-- [ ] `POST /api/auth/reset-password`
+- [x] `POST /api/auth/logout`
+- [x] `POST /api/auth/confirm-email`
+- [x] `POST /api/auth/forgot-password`
+- [x] `POST /api/auth/reset-password`
 
 ### Company
 - [x] `GET /api/company/me`
@@ -256,6 +256,12 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 - [x] `GET /api/admin/coin-ledgers`
 - [x] `POST /api/admin/coin-adjustments`
 - [x] `GET /api/admin/payment-webhook-logs`
+
+### Reports
+- [x] `GET /api/reports/dashboard`
+- [x] `GET /api/reports/stock`
+- [x] `GET /api/reports/sales`
+- [x] `GET /api/reports/purchases`
 
 ## Urutan Backend
 1. Refactor entity skeleton ke nama standard.

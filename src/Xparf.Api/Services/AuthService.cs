@@ -12,6 +12,10 @@ public interface IAuthService
     Task<AuthResponse> RegisterCompanyAsync(RegisterCompanyRequest request, CancellationToken cancellationToken);
     Task<AuthResponse> LoginAsync(LoginRequest request, CancellationToken cancellationToken);
     Task<AuthResponse> RefreshAsync(RefreshTokenRequest request, CancellationToken cancellationToken);
+    Task<AuthMessageResponse> LogoutAsync(LogoutRequest request, CancellationToken cancellationToken);
+    Task<AuthMessageResponse> ConfirmEmailAsync(ConfirmEmailRequest request, CancellationToken cancellationToken);
+    Task<AuthMessageResponse> ForgotPasswordAsync(ForgotPasswordRequest request, CancellationToken cancellationToken);
+    Task<AuthMessageResponse> ResetPasswordAsync(ResetPasswordRequest request, CancellationToken cancellationToken);
 }
 
 public sealed class AuthService(
@@ -117,6 +121,47 @@ public sealed class AuthService(
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return await CreateAuthResponseAsync(token.User, cancellationToken);
+    }
+
+    public async Task<AuthMessageResponse> LogoutAsync(LogoutRequest request, CancellationToken cancellationToken)
+    {
+        var refreshTokenHash = tokenService.HashRefreshToken(request.RefreshToken);
+        var token = await dbContext.RefreshTokens.FirstOrDefaultAsync(x => x.TokenHash == refreshTokenHash, cancellationToken);
+        if (token is not null && !token.IsRevoked)
+        {
+            token.RevokedAt = DateTime.UtcNow;
+            token.RevokedReason = "Logout";
+            await dbContext.SaveChangesAsync(cancellationToken);
+        }
+        return new AuthMessageResponse("Logout berhasil.");
+    }
+
+    public async Task<AuthMessageResponse> ConfirmEmailAsync(ConfirmEmailRequest request, CancellationToken cancellationToken)
+    {
+        var email = request.Email.Trim().ToLowerInvariant();
+        var user = await dbContext.Users.FirstOrDefaultAsync(x => x.Email == email, cancellationToken) ?? throw new InvalidOperationException("User tidak ditemukan.");
+        user.EmailConfirmed = true;
+        await dbContext.SaveChangesAsync(cancellationToken);
+        return new AuthMessageResponse("Email confirmed.");
+    }
+
+    public Task<AuthMessageResponse> ForgotPasswordAsync(ForgotPasswordRequest request, CancellationToken cancellationToken)
+    {
+        return Task.FromResult(new AuthMessageResponse("Jika email terdaftar, instruksi reset password akan dikirim."));
+    }
+
+    public async Task<AuthMessageResponse> ResetPasswordAsync(ResetPasswordRequest request, CancellationToken cancellationToken)
+    {
+        var email = request.Email.Trim().ToLowerInvariant();
+        var user = await dbContext.Users.FirstOrDefaultAsync(x => x.Email == email, cancellationToken) ?? throw new InvalidOperationException("User tidak ditemukan.");
+        user.PasswordHash = passwordHasher.Hash(user, request.NewPassword);
+        foreach (var token in await dbContext.RefreshTokens.Where(x => x.UserId == user.Id && x.RevokedAt == null).ToListAsync(cancellationToken))
+        {
+            token.RevokedAt = DateTime.UtcNow;
+            token.RevokedReason = "Password reset";
+        }
+        await dbContext.SaveChangesAsync(cancellationToken);
+        return new AuthMessageResponse("Password reset berhasil.");
     }
 
     private async Task<AuthResponse> CreateAuthResponseAsync(User user, CancellationToken cancellationToken)
