@@ -46,6 +46,8 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 - [x] Build sukses setelah roles/permissions endpoint.
 - [x] Tambah endpoint users/employees.
 - [x] Build sukses setelah users endpoint.
+- [x] Tambah CRUD endpoint branches.
+- [x] Build sukses setelah branches endpoint.
 
 ## Mapping Lama ke Baru
 | Lama | Baru |
@@ -189,7 +191,7 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 - [x] `PUT /api/roles/{id}/permissions`
 
 ### Master/Inventory
-- [ ] CRUD `/api/branches`
+- [x] CRUD `/api/branches`
 - [ ] CRUD `/api/items`
 - [ ] CRUD `/api/branch-items`
 - [ ] `GET /api/stock-ledgers`
