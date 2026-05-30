@@ -26,20 +26,20 @@ public static class SeedData
         new() { Id = 16, Code = "billing.read", Name = "Lihat Billing", Module = "Billing", CreatedAt = SeedCreatedAt },
         new() { Id = 17, Code = "billing.topup", Name = "Topup Coin", Module = "Billing", CreatedAt = SeedCreatedAt },
         new() { Id = 18, Code = "reports.read", Name = "Lihat Report", Module = "Reports", CreatedAt = SeedCreatedAt },
-        new() { Id = 19, Code = "admin.manage", Name = "Kelola Super Admin", Module = "Admin" }
+        new() { Id = 19, Code = "admin.manage", Name = "Kelola Super Admin", Module = "Admin", CreatedAt = SeedCreatedAt }
     ];
 
     public static readonly PlatformSetting[] PlatformSettings =
     [
         new() { Id = 1, Key = "coin.sale_posted_deduction", Value = "1", DataType = "decimal", Description = "Jumlah coin yang dipotong setiap sale posted.", CreatedAt = SeedCreatedAt },
         new() { Id = 2, Key = "coin.enable_deduction", Value = "true", DataType = "bool", Description = "Aktif/nonaktif potong coin pada sale posted.", CreatedAt = SeedCreatedAt },
-        new() { Id = 3, Key = "coin.minimum_balance_to_sell", Value = "1", DataType = "decimal", Description = "Minimal coin balance agar sale bisa diposting." }
+        new() { Id = 3, Key = "coin.minimum_balance_to_sell", Value = "1", DataType = "decimal", Description = "Minimal coin balance agar sale bisa diposting.", CreatedAt = SeedCreatedAt }
     ];
 
     public static readonly TopupPackage[] TopupPackages =
     [
         new() { Id = 1, Name = "Starter", MoneyAmount = 50000m, CoinAmount = 500m, SortOrder = 1, CreatedAt = SeedCreatedAt },
         new() { Id = 2, Name = "Growth", MoneyAmount = 100000m, CoinAmount = 1100m, SortOrder = 2, CreatedAt = SeedCreatedAt },
-        new() { Id = 3, Name = "Business", MoneyAmount = 250000m, CoinAmount = 3000m, SortOrder = 3 }
+        new() { Id = 3, Name = "Business", MoneyAmount = 250000m, CoinAmount = 3000m, SortOrder = 3, CreatedAt = SeedCreatedAt }
     ];
 }

@@ -147,10 +147,24 @@ public sealed class PurchaseService(XparfDbContext dbContext, ICurrentUserContex
 
     public async Task<PurchaseResponse> CancelPurchaseAsync(long id, CancellationToken cancellationToken)
     {
-        var purchase = await GetPurchaseEntityAsync(GetCompanyId(), id, cancellationToken);
-        if (purchase.Status == PurchaseStatus.Posted) throw new InvalidOperationException("Purchase posted belum bisa dicancel otomatis karena perlu reversal stok.");
+        var companyId = GetCompanyId();
+        var purchase = await GetPurchaseEntityAsync(companyId, id, cancellationToken);
+        if (purchase.Status == PurchaseStatus.Cancelled) return ToResponse(purchase);
+        await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+        if (purchase.Status == PurchaseStatus.Posted)
+        {
+            foreach (var line in purchase.Lines)
+            {
+                var branchItem = await dbContext.BranchItems.FirstOrDefaultAsync(x => x.CompanyId == companyId && x.BranchId == purchase.BranchId && x.ItemId == line.ItemId, cancellationToken)
+                    ?? throw new InvalidOperationException($"Stok item {line.ItemId} tidak ditemukan di branch.");
+                if (branchItem.QuantityOnHand < line.Quantity) throw new InvalidOperationException($"Stok item {line.ItemId} tidak cukup untuk cancel purchase.");
+                branchItem.QuantityOnHand -= line.Quantity;
+                dbContext.StockLedgers.Add(new StockLedger { CompanyId = companyId, BranchId = purchase.BranchId, ItemId = line.ItemId, MovementType = StockMovementType.PurchaseCancel, ReferenceType = "PurchaseCancel", ReferenceId = purchase.Id, QuantityOut = line.Quantity, BalanceAfter = branchItem.QuantityOnHand, UnitCost = line.UnitCost, Note = purchase.PurchaseNumber });
+            }
+        }
         purchase.Status = PurchaseStatus.Cancelled;
         await dbContext.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
         return ToResponse(purchase);
     }
 

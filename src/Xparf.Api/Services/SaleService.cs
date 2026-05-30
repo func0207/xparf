@@ -115,9 +115,31 @@ public sealed class SaleService(XparfDbContext dbContext, ICurrentUserContext cu
     }
     public async Task<SaleResponse> VoidSaleAsync(long id, CancellationToken cancellationToken)
     {
-        var sale = await GetSaleEntityAsync(GetCompanyId(), id, cancellationToken);
-        if (sale.Status == SaleStatus.Posted) throw new InvalidOperationException("Sale posted belum bisa void otomatis karena perlu reversal stok dan coin.");
-        sale.Status = SaleStatus.Voided; await dbContext.SaveChangesAsync(cancellationToken); return ToResponse(sale);
+        var companyId = GetCompanyId();
+        var sale = await GetSaleEntityAsync(companyId, id, cancellationToken);
+        if (sale.Status == SaleStatus.Voided) return ToResponse(sale);
+        await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+        if (sale.Status == SaleStatus.Posted)
+        {
+            foreach (var line in sale.Lines)
+            {
+                var branchItem = await dbContext.BranchItems.FirstOrDefaultAsync(x => x.CompanyId == companyId && x.BranchId == sale.BranchId && x.ItemId == line.ItemId, cancellationToken)
+                    ?? throw new InvalidOperationException($"Stok item {line.ItemId} tidak ditemukan di branch.");
+                branchItem.QuantityOnHand += line.Quantity;
+                dbContext.StockLedgers.Add(new StockLedger { CompanyId = companyId, BranchId = sale.BranchId, ItemId = line.ItemId, MovementType = StockMovementType.SaleVoid, ReferenceType = "SaleVoid", ReferenceId = sale.Id, QuantityIn = line.Quantity, BalanceAfter = branchItem.QuantityOnHand, UnitCost = branchItem.AverageCost, Note = sale.SaleNumber });
+            }
+            if (sale.CoinDeducted > 0)
+            {
+                var company = await dbContext.Companies.FirstAsync(x => x.Id == companyId, cancellationToken);
+                var before = company.CoinBalance;
+                company.CoinBalance += sale.CoinDeducted;
+                dbContext.CoinLedgers.Add(new CoinLedger { CompanyId = companyId, TransactionType = CoinTransactionType.Refund, ReferenceType = "SaleVoid", ReferenceId = sale.Id, CoinIn = sale.CoinDeducted, BalanceBefore = before, BalanceAfter = company.CoinBalance, Note = sale.SaleNumber });
+            }
+        }
+        sale.Status = SaleStatus.Voided;
+        await dbContext.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+        return ToResponse(sale);
     }
     private long GetCompanyId() => currentUserContext.CompanyId ?? throw new UnauthorizedAccessException("Company context tidak ditemukan.");
     private async Task<Sale> GetSaleEntityAsync(long companyId, long id, CancellationToken cancellationToken) => await dbContext.Sales.Include(x => x.Lines).Include(x => x.Payments).FirstOrDefaultAsync(x => x.CompanyId == companyId && x.Id == id, cancellationToken) ?? throw new InvalidOperationException("Sale tidak ditemukan.");

@@ -6,9 +6,11 @@ public enum StockMovementType
     Purchase = 1,
     Sale = 2,
     SaleReturn = 3,
-    Adjustment = 4,
-    TransferIn = 5,
-    TransferOut = 6,
-    MixingConsume = 7,
-    MixingProduce = 8
+    PurchaseCancel = 4,
+    SaleVoid = 5,
+    Adjustment = 6,
+    TransferIn = 7,
+    TransferOut = 8,
+    MixingConsume = 9,
+    MixingProduce = 10
 }

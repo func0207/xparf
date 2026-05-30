@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Xparf.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using Xparf.Infrastructure.Persistence;
 namespace Xparf.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(XparfDbContext))]
-    partial class XparfDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260530054630_FinalBackendModelSync")]
+    partial class FinalBackendModelSync
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

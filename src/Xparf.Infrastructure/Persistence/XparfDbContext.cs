@@ -161,6 +161,7 @@ public sealed class XparfDbContext(
             entity.HasKey(x => new { x.RoleId, x.PermissionId });
             entity.HasOne(x => x.Role).WithMany(x => x.RolePermissions).HasForeignKey(x => x.RoleId);
             entity.HasOne(x => x.Permission).WithMany(x => x.RolePermissions).HasForeignKey(x => x.PermissionId);
+            entity.HasQueryFilter(x => !x.Role.IsDeleted && !x.Permission.IsDeleted);
         });
 
         modelBuilder.Entity<UserBranch>(entity =>
@@ -168,6 +169,7 @@ public sealed class XparfDbContext(
             entity.HasKey(x => new { x.UserId, x.BranchId });
             entity.HasOne(x => x.User).WithMany(x => x.UserBranches).HasForeignKey(x => x.UserId);
             entity.HasOne(x => x.Branch).WithMany(x => x.UserBranches).HasForeignKey(x => x.BranchId);
+            entity.HasQueryFilter(x => !x.User.IsDeleted && !x.Branch.IsDeleted);
         });
     }
 
