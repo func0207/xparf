@@ -240,12 +240,12 @@ Backend dikerjakan dulu sampai endpoint stabil. Frontend setelah backend selesai
 - [x] `GET /api/sales/{id}/receipt`
 
 ### Billing/Coin
-- [ ] `GET /api/billing/coin-balance`
-- [ ] `GET /api/billing/coin-ledgers`
-- [ ] `GET /api/billing/topup-packages`
-- [ ] `POST /api/billing/topups`
-- [ ] `GET /api/billing/topups/{id}`
-- [ ] `POST /api/payment-webhooks/qris`
+- [x] `GET /api/billing/coin-balance`
+- [x] `GET /api/billing/coin-ledgers`
+- [x] `GET /api/billing/topup-packages`
+- [x] `POST /api/billing/topups`
+- [x] `GET /api/billing/topups/{id}`
+- [x] `POST /api/payment-webhooks/qris`
 
 ### Super Admin
 - [ ] `GET /api/admin/companies`
