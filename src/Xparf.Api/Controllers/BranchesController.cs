@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Xparf.Api.Contracts.Common;
 using Xparf.Api.Contracts.Branches;
 using Xparf.Api.Services;
 
@@ -11,9 +12,9 @@ namespace Xparf.Api.Controllers;
 public sealed class BranchesController(IBranchService branchService) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<BranchResponse>>> GetBranches(CancellationToken cancellationToken)
+    public async Task<ActionResult<PageResponse<BranchResponse>>> GetBranches([FromQuery] PageRequest request, CancellationToken cancellationToken)
     {
-        var response = await branchService.GetBranchesAsync(cancellationToken);
+        var response = await branchService.GetBranchesAsync(request, cancellationToken);
         return Ok(response);
     }
 

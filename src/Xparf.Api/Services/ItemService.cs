@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Xparf.Api.Contracts.Common;
 using Xparf.Api.Contracts.Items;
 using Xparf.Core.Abstractions;
 using Xparf.Core.Entities;
@@ -8,7 +9,7 @@ namespace Xparf.Api.Services;
 
 public interface IItemService
 {
-    Task<IReadOnlyList<ItemResponse>> GetItemsAsync(CancellationToken cancellationToken);
+    Task<PageResponse<ItemResponse>> GetItemsAsync(PageRequest request, CancellationToken cancellationToken);
     Task<ItemResponse> GetItemAsync(long id, CancellationToken cancellationToken);
     Task<ItemResponse> CreateItemAsync(CreateItemRequest request, CancellationToken cancellationToken);
     Task<ItemResponse> UpdateItemAsync(long id, UpdateItemRequest request, CancellationToken cancellationToken);
@@ -17,14 +18,37 @@ public interface IItemService
 
 public sealed class ItemService(XparfDbContext dbContext, ICurrentUserContext currentUserContext) : IItemService
 {
-    public async Task<IReadOnlyList<ItemResponse>> GetItemsAsync(CancellationToken cancellationToken)
+    public async Task<PageResponse<ItemResponse>> GetItemsAsync(PageRequest request, CancellationToken cancellationToken)
     {
         var companyId = GetCompanyId();
-        return await dbContext.Items
-            .Where(x => x.CompanyId == companyId)
-            .OrderBy(x => x.Sku)
+        var page = Math.Max(1, request.Page);
+        var pageSize = Math.Clamp(request.PageSize, 1, 100);
+        var query = dbContext.Items.Where(x => x.CompanyId == companyId);
+
+        if (!string.IsNullOrWhiteSpace(request.Search))
+        {
+            var search = request.Search.Trim().ToLower();
+            query = query.Where(x => x.Name.ToLower().Contains(search) || x.Barcode != null && x.Barcode.ToLower().Contains(search) || x.BaseUnit.ToLower().Contains(search));
+        }
+
+        var desc = string.Equals(request.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+        query = (request.SortBy?.Trim().ToLowerInvariant()) switch
+        {
+            "sku" => desc ? query.OrderByDescending(x => x.Sku) : query.OrderBy(x => x.Sku),
+            "name" => desc ? query.OrderByDescending(x => x.Name) : query.OrderBy(x => x.Name),
+            "barcode" => desc ? query.OrderByDescending(x => x.Barcode) : query.OrderBy(x => x.Barcode),
+            "baseunit" => desc ? query.OrderByDescending(x => x.BaseUnit) : query.OrderBy(x => x.BaseUnit),
+            _ => desc ? query.OrderByDescending(x => x.Sku) : query.OrderBy(x => x.Sku)
+        };
+
+        var totalItems = await query.CountAsync(cancellationToken);
+        var items = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .Select(x => ToResponse(x))
             .ToListAsync(cancellationToken);
+
+        return PageResponse<ItemResponse>.Create(items, page, pageSize, totalItems);
     }
 
     public async Task<ItemResponse> GetItemAsync(long id, CancellationToken cancellationToken)

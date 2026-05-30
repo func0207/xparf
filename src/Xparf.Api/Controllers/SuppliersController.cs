@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Xparf.Api.Contracts.Common;
 using Xparf.Api.Contracts.Suppliers;
 using Xparf.Api.Services;
 
@@ -11,9 +12,9 @@ namespace Xparf.Api.Controllers;
 public sealed class SuppliersController(ISupplierService supplierService) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<SupplierResponse>>> GetSuppliers(CancellationToken cancellationToken)
+    public async Task<ActionResult<PageResponse<SupplierResponse>>> GetSuppliers([FromQuery] PageRequest request, CancellationToken cancellationToken)
     {
-        var response = await supplierService.GetSuppliersAsync(cancellationToken);
+        var response = await supplierService.GetSuppliersAsync(request, cancellationToken);
         return Ok(response);
     }
 

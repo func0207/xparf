@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Xparf.Api.Contracts.Common;
 using Xparf.Api.Contracts.Items;
 using Xparf.Api.Services;
 
@@ -11,9 +12,9 @@ namespace Xparf.Api.Controllers;
 public sealed class ItemsController(IItemService itemService) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<ItemResponse>>> GetItems(CancellationToken cancellationToken)
+    public async Task<ActionResult<PageResponse<ItemResponse>>> GetItems([FromQuery] PageRequest request, CancellationToken cancellationToken)
     {
-        var response = await itemService.GetItemsAsync(cancellationToken);
+        var response = await itemService.GetItemsAsync(request, cancellationToken);
         return Ok(response);
     }
 

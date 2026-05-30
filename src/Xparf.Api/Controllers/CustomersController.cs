@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Xparf.Api.Contracts.Common;
 using Xparf.Api.Contracts.Customers;
 using Xparf.Api.Services;
 
@@ -11,9 +12,9 @@ namespace Xparf.Api.Controllers;
 public sealed class CustomersController(ICustomerService customerService) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<CustomerResponse>>> GetCustomers(CancellationToken cancellationToken)
+    public async Task<ActionResult<PageResponse<CustomerResponse>>> GetCustomers([FromQuery] PageRequest request, CancellationToken cancellationToken)
     {
-        var response = await customerService.GetCustomersAsync(cancellationToken);
+        var response = await customerService.GetCustomersAsync(request, cancellationToken);
         return Ok(response);
     }
 
