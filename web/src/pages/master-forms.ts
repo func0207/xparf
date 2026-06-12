@@ -87,7 +87,7 @@ export const branchFields: FormField<BranchForm>[] = [
 ]
 
 export function removeItemCreateOnly(value: ItemForm) {
-  const { id: _id, sku: _sku, ...rest } = value
+  const { id: _id, ...rest } = value
   return rest
 }
 

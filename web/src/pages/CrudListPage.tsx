@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { DataTable, type Column, type PageResponse } from '../components/DataTable'
-import { api } from '../lib/api'
+import { api, getApiErrorMessage } from '../lib/api'
 
 export type FieldKind = 'text' | 'number' | 'checkbox' | 'select'
 export type FormField<T extends Record<string, unknown>> = {
@@ -104,7 +104,7 @@ export function CrudListPage<T extends Record<string, unknown>>({ title, endpoin
           fields={fields}
           value={form}
           isSaving={saveMutation.isPending}
-          error={saveMutation.error ? 'Gagal menyimpan data. Cek validasi/API.' : undefined}
+          error={saveMutation.error ? getApiErrorMessage(saveMutation.error, 'Gagal menyimpan data. Cek validasi/API.') : undefined}
           onClose={closeForm}
           onChange={setForm}
           onSubmit={() => saveMutation.mutate(form)}
