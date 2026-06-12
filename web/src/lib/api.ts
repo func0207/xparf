@@ -11,6 +11,15 @@ api.interceptors.request.use((config) => {
   return config
 })
 
+export function getApiErrorMessage(error: unknown, fallback = 'Request gagal. Coba lagi.') {
+  if (axios.isAxiosError(error)) {
+    const data = error.response?.data as { detail?: string; title?: string; errors?: Record<string, string[]> } | undefined
+    const firstValidationError = data?.errors ? Object.values(data.errors).flat()[0] : undefined
+    return firstValidationError ?? data?.detail ?? data?.title ?? error.message ?? fallback
+  }
+  return fallback
+}
+
 export type AuthResponse = {
   accessToken: string
   refreshToken: string

@@ -13,6 +13,8 @@ import { BillingPage } from './pages/BillingPage'
 import { AdminPage } from './pages/AdminPage'
 import { ComplaintsPage } from './pages/ComplaintsPage'
 import { ReceiptPage } from './pages/ReceiptPage'
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage'
+import { LandingPage } from './pages/LandingPage'
 import { CrudListPage } from './pages/CrudListPage'
 import { branchColumns, customerColumns, itemColumns, supplierColumns } from './pages/ListPage'
 import {
@@ -31,11 +33,13 @@ import {
 export default function App() {
   return (
     <Routes>
+      <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route element={<ProtectedRoute />}>
         <Route element={<MainLayout />}>
-          <Route index element={<DashboardPage />} />
+          <Route path="dashboard" element={<DashboardPage />} />
           <Route path="master/items" element={<CrudListPage title="Master Barang" endpoint="/items" columns={itemColumns} fields={itemFields} createDefaults={itemDefaults} updateShape={removeItemCreateOnly} sortDefault="sku" />} />
           <Route path="master/customers" element={<CrudListPage title="Master Konsumen" endpoint="/customers" columns={customerColumns} fields={customerFields} createDefaults={customerDefaults} updateShape={removeCodeAndId} />} />
           <Route path="master/suppliers" element={<CrudListPage title="Master Distributor" endpoint="/suppliers" columns={supplierColumns} fields={supplierFields} createDefaults={supplierDefaults} updateShape={removeCodeAndId} />} />

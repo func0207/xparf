@@ -63,7 +63,15 @@ builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("ReactDev", policy => policy
-        .WithOrigins("http://localhost:5173")
+        .SetIsOriginAllowed(origin =>
+        {
+            if (!Uri.TryCreate(origin, UriKind.Absolute, out var uri))
+            {
+                return false;
+            }
+
+            return uri.Scheme == "http" && uri.Port == 5173;
+        })
         .AllowAnyHeader()
         .AllowAnyMethod());
 });

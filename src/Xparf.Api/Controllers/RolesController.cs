@@ -10,6 +10,13 @@ namespace Xparf.Api.Controllers;
 [Route("api/roles")]
 public sealed class RolesController(IRoleService roleService) : ControllerBase
 {
+    [HttpGet("permissions")]
+    public async Task<ActionResult<IReadOnlyList<PermissionResponse>>> GetPermissions(CancellationToken cancellationToken)
+    {
+        var response = await roleService.GetPermissionsAsync(cancellationToken);
+        return Ok(response);
+    }
+
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<RoleResponse>>> GetRoles(CancellationToken cancellationToken)
     {
